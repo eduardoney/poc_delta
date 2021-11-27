@@ -26,7 +26,7 @@ helm install prometheus prometheus-community/prometheus --namespace monitoring -
 ## Ingestão
 Para receber os eventos vamos utilizar o https://strimzi.io/ que é um Kafka para kubernetes.
 
-### Instação no kubernetes
+### Instalação no kubernetes
 Criar o namespace
 ```
 kubectl create namespace ingestion
