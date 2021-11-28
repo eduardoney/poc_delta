@@ -9,7 +9,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='streaming app')
 
     # add parameters to arg parse
-    parser.add_argument('stream', type=str, choices=['confluent', 'kafka'], help='stream processing')
+    parser.add_argument('stream', type=str, choices=[
+                        'confluent', 'kafka'], help='stream processing')
     parser.add_argument('broker', type=str, help='apache kafka broker')
     parser.add_argument('topic', type=str, help='topic name')
     parser.add_argument('qty_rows', type=int, help='amount of events')
@@ -19,10 +20,11 @@ if __name__ == '__main__':
 
     data = make_data.generate_data(args.qty_rows)
 
-    json_kafka.KafkaProducer().json_producer(broker=args.broker,topic=args.topic, dataframe=data)
-        
-        
+    json_kafka.KafkaProducer().json_producer(
+        broker=args.broker, topic=args.topic, dataframe=data)
+
     # cli call
     # python3.8 main.py
     # python3.8 main.py 'kafka' 'dev-kafka-confluent.eastus2.cloudapp.azure.com' 'src-app-music-data-json' 10
     # python3.8 main.py 'confluent' 'dev-kafka-confluent.eastus2.cloudapp.azure.com' 'http://dev-kafka-confluent.eastus2.cloudapp.azure.com:8081' 'src-app-music-data-avro' 10
+    #python3 main.py kafka localhost:9092 src-app-music-data-json 1

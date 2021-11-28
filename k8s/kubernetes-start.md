@@ -48,9 +48,41 @@ Tipos de armazenamentos:
 * JBOD - Cria um disco para armazenamento do dado  
 * EPEMERAL - Os dados quando o pod morre o dado morre tbm.
 ```
-kubectl apply -f .\k8s\kafka-jbod.yml -n ingestion
+--config maps de metricas
+kubectl apply -f .\k8s\kafka\metrics\ -n ingestion
+kubectl apply -f .\k8s\kafka\kafka-jbod.yaml -n ingestion
 ```
-**obs:** Caso os cluster kafka não for criado, não retorna os pods utilizando o comando:
+**obs:** Caso os cluster kafka não for criado, não retorna os pods zookerper e broker, validar utilizando o comando:
 > kubectl get all -n ingestion  
 
-Deve ser verificado o log do pod do **strimzi-cluster-operator-xxxxxx** que é resposável por subir o cluster.
+Deve ser verificado o log do pod do **strimzi-cluster-operator-xxxxxx** que é resposável por subir o cluster.  
+Para validar se o cluster está funcional executar o comando:
+```
+kubectl wait kafka/dev --for=condition=Ready --timeout=300s -n ingestion
+```
+
+**Criando topicos**
+```
+kubectl apply -f .\k8s\kafka\kafka-topic.yaml -n ingestion
+```
+Para listar os tópicos:
+```
+kubectl get kafkatopics -n ingestion
+```
+**Enviando mensagens**  
+Validar qual a porta do broker
+```
+kubectl get service dev-kafka-external-bootstrap -n ingestion -o=jsonpath="{.spec.ports[0].nodePort}{'\n'}"
+```
+Encotrar o IP do node no cluster
+```
+kubectl get nodes --output=jsonpath="{range .items[*]}{.status.addresses[?(@.type=='InternalIP')].address}{'\n'}{end}"
+```
+
+kubectl get service my-cluster-kafka-external-bootstrap -n kubectl get service dev-kafka-external-bootstrap -n ingestion -o=jsonpath="{.spec.ports[0].nodePort}{'\n'}"
+kubectl port-forward service/dev-kafka-bootstrap 9063:9093 -n ingestion
+
+
+bin/kafka-console-producer.sh --broker-list 127.0.0.1:31265 --topic src-app-reservas
+
+bin/kafka-console-producer.sh --broker-list <node-address>:_<node-port>_ --topic my-topic

@@ -1,7 +1,6 @@
 # import libraries
 import json
 from confluent_kafka import Producer
-from libs import read_files
 
 
 class KafkaProducer():
@@ -11,7 +10,8 @@ class KafkaProducer():
         if err is not None:
             print('message delivery failed: {}'.format(err))
         else:
-            print('message successfully produced to {} [{}] at offset {}'.format(msg.topic(), msg.partition(), msg.offset()))
+            print('message successfully produced to {} [{}] at offset {}'.format(
+                msg.topic(), msg.partition(), msg.offset()))
 
     # get data to insert from (read_files.csv)
     # print(type(CSV().csv_reader()))
@@ -45,7 +45,7 @@ class KafkaProducer():
                 # been successfully delivered or failed permanently.
                 p.produce(
                     topic=topic,
-                    value=json.dumps(data,default=str).encode('utf-8'),
+                    value=json.dumps(data, default=str).encode('utf-8'),
                     callback=self.delivery_report
                 )
 
