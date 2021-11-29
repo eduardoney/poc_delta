@@ -15,5 +15,9 @@
 pyvenv.cfg
 .venv
 pip-selfcheck.json
-
+stage/
+spark/metastore_db
+*.log
+*.jar
+*.pyc
 # End of https://www.toptal.com/developers/gitignore/api/venv

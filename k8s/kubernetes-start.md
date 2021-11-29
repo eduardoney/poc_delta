@@ -38,6 +38,9 @@ helm search hub strimzi/
 helm repo update
 helm install kafka strimzi/strimzi-kafka-operator --namespace ingestion --version 0.26.0
 ```
+Para buscar quais os valores foram aplicados na instalação executar o comando:
+>helm show values strimzi/strimzi-kafka-operator > values.yaml
+
 Validar se operador foi criado
 ```
 kubectl get all -n ingestion
@@ -78,11 +81,11 @@ Encotrar o IP do node no cluster
 ```
 kubectl get nodes --output=jsonpath="{range .items[*]}{.status.addresses[?(@.type=='InternalIP')].address}{'\n'}{end}"
 ```
-
-kubectl get service my-cluster-kafka-external-bootstrap -n kubectl get service dev-kafka-external-bootstrap -n ingestion -o=jsonpath="{.spec.ports[0].nodePort}{'\n'}"
-kubectl port-forward service/dev-kafka-bootstrap 9063:9093 -n ingestion
-
-
-bin/kafka-console-producer.sh --broker-list 127.0.0.1:31265 --topic src-app-reservas
-
-bin/kafka-console-producer.sh --broker-list <node-address>:_<node-port>_ --topic my-topic
+Para validar a conexão com o cluster de forma externa utilizar o comando:  
+**obs**: Será necessário instalar a cli do kafka para executar esses comandos http://kafka.apache.org/downloads **Binary downloads**
+```
+unix
+bin/afka-topics.sh --list --bootstrap-server <IP>:<PORTA>
+windows
+%KAFKA_HOME%/bin/windows/kafka-topics.bat --list --bootstrap-server <IP>:<PORTA>
+```

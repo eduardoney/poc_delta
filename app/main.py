@@ -26,5 +26,5 @@ if __name__ == '__main__':
     # cli call
     # python3.8 main.py
     # python3.8 main.py 'kafka' 'dev-kafka-confluent.eastus2.cloudapp.azure.com' 'src-app-music-data-json' 10
-    # python3.8 main.py 'confluent' 'dev-kafka-confluent.eastus2.cloudapp.azure.com' 'http://dev-kafka-confluent.eastus2.cloudapp.azure.com:8081' 'src-app-music-data-avro' 10
-    #python3 main.py kafka localhost:9092 src-app-music-data-json 1
+    # python3pt.8 main.py 'confluent' 'dev-kafka-confluent.eastus2.cloudapp.azure.com' 'http://dev-kafka-confluent.eastus2.cloudapp.azure.com:8081' 'src-app-music-data-avro' 10
+    # python3 ./app/main.py kafka 34.135.189.150:9094 src-app-reservas 200
