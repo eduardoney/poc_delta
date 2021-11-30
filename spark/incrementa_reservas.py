@@ -7,7 +7,7 @@ from delta.tables import *
 if __name__ == "__main__":
 
     # Configurações Kafka
-    broker = "34.135.189.150:9094"
+    broker = "104.197.154.17:9094"
     topic = "src-app-reservas"
     strategy = "earliest"
 
@@ -46,6 +46,7 @@ if __name__ == "__main__":
         .load()
     )
 
+    #Schema para deserialização
     schema = StructType([StructField("cod_reserva", StringType(), False),
                          StructField("agencia", StringType(), False),
                          StructField("dt_retirada", StringType(), False),
@@ -54,6 +55,7 @@ if __name__ == "__main__":
                          StructField("dt_devolucao", StringType(), False)
                          ])
 
+    #Transformação do dado binário utilizando o schema.
     df = (
         df
         .select(from_json(col("value").cast('string'), schema).alias("data"))
@@ -69,7 +71,9 @@ if __name__ == "__main__":
                 )
           )
 
+
     #Tabela de destino
+    print("Leitura dados destino.")
     deltaTable = DeltaTable.forPath(spark, "gs://poc_delta/stage/")
     
     # Function to upsert microBatchOutputDF into Delta table using merge
@@ -80,7 +84,9 @@ if __name__ == "__main__":
             .whenMatchedUpdateAll() \
             .whenNotMatchedInsertAll() \
             .execute()
-
+    
+    print("Início consumo dos dados.")   
+    # Query que grava os dados no storage.
     query = (
         df.writeStream
         .outputMode("update")
@@ -92,11 +98,11 @@ if __name__ == "__main__":
         .start()
     )
 
-    query.awaitTermination()
+    #Segura o loop do pull do kafka, timeout 10 mim
+    query.awaitTermination(600)
     spark.stop()
 
     # .option("checkpointLocation", "path/to/HDFS/dir") \
-
     """ Append
         query = (
         df.writeStream
